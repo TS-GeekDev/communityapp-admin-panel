@@ -1,5 +1,5 @@
 import React from 'react';
-import { Globe, LogOut, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Globe, LogOut, X, ChevronLeft, ChevronRight, Shield } from 'lucide-react';
 import { MENU_ITEMS } from '../constants';
 import { styles } from '../styles/Sidebar.styles';
 
@@ -10,6 +10,7 @@ interface SidebarProps {
   communityName: string;
   isCollapsed: boolean;
   onToggleSidebar: () => void;
+  onNavigateToPrivacy?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -19,6 +20,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   communityName,
   isCollapsed,
   onToggleSidebar,
+  onNavigateToPrivacy,
 }) => {
   return (
     <aside style={styles.sidebar}>
@@ -102,18 +104,39 @@ export const Sidebar: React.FC<SidebarProps> = ({
         })}
       </nav>
 
-      <button
-        onClick={onLogout}
-        style={{
-          ...styles.logoutButton,
-          justifyContent: isCollapsed ? 'center' : 'flex-start',
-          padding: isCollapsed ? '12px 0' : '12px 14px',
-        }}
-        title={isCollapsed ? "Sign Out" : undefined}
-      >
-        <LogOut size={18} />
-        {!isCollapsed && <span>Sign Out</span>}
-      </button>
+      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+        <button
+          onClick={onNavigateToPrivacy}
+          style={{
+            ...styles.navButton,
+            justifyContent: isCollapsed ? 'center' : 'flex-start',
+            padding: isCollapsed ? '10px 0' : '10px 14px',
+            fontSize: '0.85rem',
+            color: 'var(--text-muted)',
+            border: 'none',
+            background: 'transparent',
+            cursor: 'pointer',
+          }}
+          title={isCollapsed ? "Privacy Policy" : undefined}
+        >
+          <Shield size={16} />
+          {!isCollapsed && <span>Privacy Policy</span>}
+        </button>
+
+        <button
+          onClick={onLogout}
+          style={{
+            ...styles.logoutButton,
+            marginTop: 0,
+            justifyContent: isCollapsed ? 'center' : 'flex-start',
+            padding: isCollapsed ? '12px 0' : '12px 14px',
+          }}
+          title={isCollapsed ? "Sign Out" : undefined}
+        >
+          <LogOut size={18} />
+          {!isCollapsed && <span>Sign Out</span>}
+        </button>
+      </div>
     </aside>
   );
 };

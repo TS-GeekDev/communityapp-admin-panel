@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600&display=swap');
 
 :root {
   --font-display: 'Outfit', 'Inter', system-ui, sans-serif;
@@ -411,6 +411,20 @@ button[title="Close Sidebar"]:hover,
   .dashboard-bottom-section {
     grid-template-columns: 1fr !important;
   }
+
+  .privacy-content-wrapper {
+    grid-template-columns: 1fr !important;
+    padding: 24px 16px !important;
+    gap: 20px !important;
+  }
+
+  .privacy-main-panel {
+    padding: 24px 18px !important;
+  }
+
+  .hide-on-mobile {
+    display: none !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -433,4 +447,103 @@ button[title="Close Sidebar"]:hover,
     padding: 24px 20px !important;
   }
 }
+
+/* ========================================================
+   PARICHAY Privacy Policy Page Theme (Scoped strictly to this page)
+   ======================================================== */
+.parichay-privacy-page {
+  background-color: #FDF8F2 !important;
+  color: #1A1A2E !important;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+
+.parichay-privacy-page h1,
+.parichay-privacy-page h2,
+.parichay-privacy-page h3 {
+  font-family: 'Playfair Display', Georgia, serif !important;
+  color: #1A1A2E;
+}
+
+.parichay-privacy-page .parichay-btn-primary {
+  background-color: #E8690A !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  border-radius: 14px !important;
+  padding: 10px 18px !important;
+  box-shadow: 0 4px 12px rgba(232, 105, 10, 0.25) !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 0.88rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.parichay-privacy-page .parichay-btn-primary:hover {
+  background-color: #C94E00 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 16px rgba(201, 78, 0, 0.35) !important;
+}
+
+.parichay-privacy-page .parichay-btn-outline {
+  background-color: #FFFFFF !important;
+  color: #E8690A !important;
+  border: 1.5px solid #E8690A !important;
+  border-radius: 14px !important;
+  padding: 8px 14px !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.parichay-privacy-page .parichay-btn-outline:hover {
+  background-color: #FEF0E6 !important;
+  border-color: #C94E00 !important;
+  color: #C94E00 !important;
+}
+
+.parichay-privacy-page .privacy-toc-link:hover {
+  background-color: #FEF0E6 !important;
+  color: #E8690A !important;
+}
+
+/* Print styling for privacy policy */
+@media print {
+  header,
+  footer,
+  .privacy-toc,
+  .btn,
+  button {
+    display: none !important;
+  }
+
+  .parichay-privacy-page {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .privacy-content-wrapper {
+    display: block !important;
+    padding: 0 !important;
+  }
+
+  .privacy-main-panel {
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
+  * {
+    color: #000000 !important;
+  }
+}
+
 
