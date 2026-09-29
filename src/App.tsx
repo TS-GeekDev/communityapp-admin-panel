@@ -10,6 +10,7 @@ import { Approvals } from './views/Approvals';
 import { Members } from './views/Members';
 import { Publish } from './views/Publish';
 import { PrivacyPolicy } from './views/PrivacyPolicy';
+import { TermsOfService } from './views/TermsOfService';
 
 export const App: React.FC = () => {
   const [token, setToken] = useState<string | null>(getAuthToken());
@@ -32,18 +33,39 @@ export const App: React.FC = () => {
     return p === '/privacy-policy' || p === '/privacy' || h === '#privacy-policy' || h === '#privacy';
   };
 
-  const [currentRoute, setCurrentRoute] = useState<'app' | 'privacy'>(() => {
-    return isPrivacyPath(window.location.pathname, window.location.hash) ? 'privacy' : 'app';
-  });
+  const isTermsPath = (pathname: string, hash: string) => {
+    const p = pathname.toLowerCase();
+    const h = hash.toLowerCase();
+    return p === '/terms-of-service' || p === '/terms' || p === '/terms-and-conditions' || h === '#terms-of-service' || h === '#terms';
+  };
 
-  const navigateTo = (route: 'app' | 'privacy', path: string) => {
+  const getInitialRoute = (): 'app' | 'privacy' | 'terms' => {
+    const p = window.location.pathname;
+    const h = window.location.hash;
+    if (isPrivacyPath(p, h)) return 'privacy';
+    if (isTermsPath(p, h)) return 'terms';
+    return 'app';
+  };
+
+  const [currentRoute, setCurrentRoute] = useState<'app' | 'privacy' | 'terms'>(getInitialRoute);
+
+  const navigateTo = (route: 'app' | 'privacy' | 'terms', path: string) => {
     window.history.pushState({}, '', path);
     setCurrentRoute(route);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   useEffect(() => {
     const handlePopState = () => {
-      setCurrentRoute(isPrivacyPath(window.location.pathname, window.location.hash) ? 'privacy' : 'app');
+      const p = window.location.pathname;
+      const h = window.location.hash;
+      if (isPrivacyPath(p, h)) {
+        setCurrentRoute('privacy');
+      } else if (isTermsPath(p, h)) {
+        setCurrentRoute('terms');
+      } else {
+        setCurrentRoute('app');
+      }
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
@@ -142,6 +164,20 @@ export const App: React.FC = () => {
     return (
       <PrivacyPolicy
         onBack={() => navigateTo('app', '/')}
+        onNavigateToTerms={() => navigateTo('terms', '/terms-of-service')}
+        isLoggedIn={Boolean(token)}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+      />
+    );
+  }
+
+  // If viewing the public Terms of Service page
+  if (currentRoute === 'terms') {
+    return (
+      <TermsOfService
+        onBack={() => navigateTo('app', '/')}
+        onNavigateToPrivacy={() => navigateTo('privacy', '/privacy-policy')}
         isLoggedIn={Boolean(token)}
         theme={theme}
         onToggleTheme={toggleTheme}
@@ -156,6 +192,7 @@ export const App: React.FC = () => {
           onLoginSuccess={handleLoginSuccess}
           showToast={showToast}
           onNavigateToPrivacy={() => navigateTo('privacy', '/privacy-policy')}
+          onNavigateToTerms={() => navigateTo('terms', '/terms-of-service')}
         />
         {toast && (
           <Toast
@@ -199,6 +236,7 @@ export const App: React.FC = () => {
         isCollapsed={isSidebarCollapsed}
         onToggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
         onNavigateToPrivacy={() => navigateTo('privacy', '/privacy-policy')}
+        onNavigateToTerms={() => navigateTo('terms', '/terms-of-service')}
       />
       <Header
         tabTitle={currentTab}
