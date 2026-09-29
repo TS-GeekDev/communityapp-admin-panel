@@ -1,5 +1,5 @@
 import React from 'react';
-import { Globe, LogOut, X, ChevronLeft, ChevronRight, Shield } from 'lucide-react';
+import { Globe, LogOut, X, ChevronLeft, ChevronRight, Shield, FileText } from 'lucide-react';
 import { MENU_ITEMS } from '../constants';
 import { styles } from '../styles/Sidebar.styles';
 
@@ -11,6 +11,7 @@ interface SidebarProps {
   isCollapsed: boolean;
   onToggleSidebar: () => void;
   onNavigateToPrivacy?: () => void;
+  onNavigateToTerms?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -21,6 +22,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   isCollapsed,
   onToggleSidebar,
   onNavigateToPrivacy,
+  onNavigateToTerms,
 }) => {
   return (
     <aside style={styles.sidebar}>
@@ -121,6 +123,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
         >
           <Shield size={16} />
           {!isCollapsed && <span>Privacy Policy</span>}
+        </button>
+
+        <button
+          onClick={onNavigateToTerms}
+          style={{
+            ...styles.navButton,
+            justifyContent: isCollapsed ? 'center' : 'flex-start',
+            padding: isCollapsed ? '10px 0' : '10px 14px',
+            fontSize: '0.85rem',
+            color: 'var(--text-muted)',
+            border: 'none',
+            background: 'transparent',
+            cursor: 'pointer',
+          }}
+          title={isCollapsed ? "Terms of Service" : undefined}
+        >
+          <FileText size={16} />
+          {!isCollapsed && <span>Terms of Service</span>}
         </button>
 
         <button

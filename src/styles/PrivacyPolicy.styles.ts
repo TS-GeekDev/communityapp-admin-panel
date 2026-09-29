@@ -22,12 +22,15 @@ export const styles: Record<string, React.CSSProperties> = {
   container: {
     minHeight: '100vh',
     width: '100%',
+    maxWidth: '100vw',
     backgroundColor: AppColors.cream,
     color: AppColors.textDark,
     fontFamily: "'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif",
     display: 'flex',
     flexDirection: 'column',
     position: 'relative',
+    overflowX: 'hidden',
+    boxSizing: 'border-box',
   },
   header: {
     position: 'sticky',
@@ -43,6 +46,9 @@ export const styles: Record<string, React.CSSProperties> = {
     justifyContent: 'space-between',
     gap: '16px',
     boxShadow: '0 2px 10px rgba(61, 61, 143, 0.04)',
+    boxSizing: 'border-box',
+    width: '100%',
+    maxWidth: '100%',
   },
   brandGroup: {
     display: 'flex',

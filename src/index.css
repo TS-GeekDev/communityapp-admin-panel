@@ -449,9 +449,10 @@ button[title="Close Sidebar"]:hover,
 }
 
 /* ========================================================
-   PARICHAY Privacy Policy Page Theme (Scoped strictly to this page)
+   PARICHAY Privacy Policy & Terms of Service Theme (Scoped strictly to these pages)
    ======================================================== */
-.parichay-privacy-page {
+.parichay-privacy-page,
+.parichay-terms-page {
   background-color: #FDF8F2 !important;
   color: #1A1A2E !important;
   font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
@@ -459,12 +460,16 @@ button[title="Close Sidebar"]:hover,
 
 .parichay-privacy-page h1,
 .parichay-privacy-page h2,
-.parichay-privacy-page h3 {
+.parichay-privacy-page h3,
+.parichay-terms-page h1,
+.parichay-terms-page h2,
+.parichay-terms-page h3 {
   font-family: 'Playfair Display', Georgia, serif !important;
   color: #1A1A2E;
 }
 
-.parichay-privacy-page .parichay-btn-primary {
+.parichay-privacy-page .parichay-btn-primary,
+.parichay-terms-page .parichay-btn-primary {
   background-color: #E8690A !important;
   color: #FFFFFF !important;
   border: none !important;
@@ -481,13 +486,15 @@ button[title="Close Sidebar"]:hover,
   transition: all 0.2s ease !important;
 }
 
-.parichay-privacy-page .parichay-btn-primary:hover {
+.parichay-privacy-page .parichay-btn-primary:hover,
+.parichay-terms-page .parichay-btn-primary:hover {
   background-color: #C94E00 !important;
   transform: translateY(-1px) !important;
   box-shadow: 0 6px 16px rgba(201, 78, 0, 0.35) !important;
 }
 
-.parichay-privacy-page .parichay-btn-outline {
+.parichay-privacy-page .parichay-btn-outline,
+.parichay-terms-page .parichay-btn-outline {
   background-color: #FFFFFF !important;
   color: #E8690A !important;
   border: 1.5px solid #E8690A !important;
@@ -503,18 +510,206 @@ button[title="Close Sidebar"]:hover,
   transition: all 0.2s ease !important;
 }
 
-.parichay-privacy-page .parichay-btn-outline:hover {
+.parichay-privacy-page .parichay-btn-outline:hover,
+.parichay-terms-page .parichay-btn-outline:hover {
   background-color: #FEF0E6 !important;
   border-color: #C94E00 !important;
   color: #C94E00 !important;
 }
 
-.parichay-privacy-page .privacy-toc-link:hover {
+.parichay-privacy-page .privacy-toc-link:hover,
+.parichay-terms-page .privacy-toc-link:hover {
   background-color: #FEF0E6 !important;
   color: #E8690A !important;
 }
 
-/* Print styling for privacy policy */
+/* Button label switches for desktop vs mobile */
+.btn-label-mobile {
+  display: none !important;
+}
+.btn-label-desktop {
+  display: inline !important;
+}
+
+/* Prevent horizontal page overflow on legal pages */
+html, body {
+  overflow-x: hidden;
+}
+
+.parichay-privacy-page,
+.parichay-terms-page {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+  box-sizing: border-box !important;
+}
+
+/* Mobile responsive rules for Legal pages */
+@media (max-width: 768px) {
+  /* Enforce hide-on-mobile with high specificity over specific button classes */
+  .parichay-privacy-page .hide-on-mobile,
+  .parichay-terms-page .hide-on-mobile,
+  .hide-on-mobile {
+    display: none !important;
+  }
+
+  /* Swap button labels */
+  .btn-label-desktop {
+    display: none !important;
+  }
+  .btn-label-mobile {
+    display: inline !important;
+  }
+
+  /* Header adjustments */
+  .parichay-legal-header {
+    padding: 10px 14px !important;
+    gap: 8px !important;
+    box-sizing: border-box !important;
+  }
+
+  .parichay-brand-group {
+    gap: 8px !important;
+    min-width: 0 !important;
+    flex-shrink: 1 !important;
+  }
+
+  .parichay-logo-img {
+    width: 34px !important;
+    height: 34px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .parichay-brand-title {
+    font-size: 1.05rem !important;
+    white-space: nowrap !important;
+  }
+
+  .parichay-brand-subtitle {
+    font-size: 0.65rem !important;
+    letter-spacing: 0.02em !important;
+    white-space: nowrap !important;
+  }
+
+  .parichay-header-actions {
+    gap: 6px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .parichay-header-actions .parichay-btn-primary,
+  .parichay-header-actions .parichay-btn-outline {
+    padding: 6px 10px !important;
+    font-size: 0.78rem !important;
+    border-radius: 10px !important;
+    gap: 4px !important;
+    white-space: nowrap !important;
+  }
+
+  .parichay-header-actions svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  /* Hero banner responsive */
+  .parichay-hero-banner {
+    padding: 28px 16px 22px 16px !important;
+    box-sizing: border-box !important;
+  }
+
+  .parichay-hero-logo {
+    width: 62px !important;
+    height: 62px !important;
+    margin-bottom: 12px !important;
+    border-radius: 16px !important;
+    padding: 6px !important;
+  }
+
+  .parichay-hero-title {
+    font-size: clamp(1.4rem, 5.5vw, 1.9rem) !important;
+    margin-bottom: 10px !important;
+    word-break: break-word !important;
+    line-height: 1.25 !important;
+  }
+
+  .parichay-hero-subtitle {
+    font-size: 0.88rem !important;
+    margin-bottom: 14px !important;
+    line-height: 1.55 !important;
+    padding: 0 4px !important;
+  }
+
+  .parichay-meta-row {
+    gap: 8px 12px !important;
+    font-size: 0.78rem !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+  }
+
+  .parichay-meta-dot {
+    display: none !important;
+  }
+
+  /* Content wrapper & main panel */
+  .privacy-content-wrapper {
+    grid-template-columns: 100% !important;
+    padding: 16px 12px 32px 12px !important;
+    gap: 16px !important;
+    box-sizing: border-box !important;
+  }
+
+  .privacy-main-panel {
+    padding: 20px 14px !important;
+    border-radius: 14px !important;
+    box-sizing: border-box !important;
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
+  }
+
+  .parichay-privacy-page h2,
+  .parichay-terms-page h2 {
+    font-size: 1.15rem !important;
+  }
+
+  .parichay-privacy-page p,
+  .parichay-terms-page p,
+  .parichay-privacy-page li,
+  .parichay-terms-page li {
+    font-size: 0.88rem !important;
+    line-height: 1.6 !important;
+  }
+
+  /* Contact grid responsive */
+  .parichay-privacy-page [style*="contactGrid"],
+  .parichay-terms-page [style*="contactGrid"] {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .parichay-brand-subtitle {
+    display: none !important;
+  }
+
+  .parichay-header-actions {
+    gap: 4px !important;
+  }
+
+  .parichay-header-actions .parichay-share-btn span {
+    display: none !important;
+  }
+
+  .parichay-header-actions .parichay-share-btn {
+    padding: 6px 8px !important;
+  }
+
+  .parichay-header-actions .parichay-btn-primary,
+  .parichay-header-actions .parichay-btn-outline {
+    padding: 6px 8px !important;
+    font-size: 0.75rem !important;
+  }
+}
+
+/* Print styling for privacy policy & terms of service */
 @media print {
   header,
   footer,
@@ -524,7 +719,8 @@ button[title="Close Sidebar"]:hover,
     display: none !important;
   }
 
-  .parichay-privacy-page {
+  .parichay-privacy-page,
+  .parichay-terms-page {
     background: #ffffff !important;
     color: #000000 !important;
   }

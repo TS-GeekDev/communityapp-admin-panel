@@ -22,11 +22,13 @@ interface PrivacyPolicyProps {
   isLoggedIn?: boolean;
   theme?: 'dark' | 'light';
   onToggleTheme?: () => void;
+  onNavigateToTerms?: () => void;
 }
 
 export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({
   onBack,
   isLoggedIn = false,
+  onNavigateToTerms,
 }) => {
   const [copied, setCopied] = useState(false);
   const [activeSection, setActiveSection] = useState('section-purpose');
@@ -77,16 +79,16 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({
   return (
     <div style={styles.container} className="parichay-privacy-page">
       {/* Top Navigation Bar */}
-      <header style={styles.header}>
-        <div style={styles.brandGroup}>
-          <img src={parichayLogo} alt="PARICHAY Logo" style={styles.logoImg} />
+      <header style={styles.header} className="parichay-legal-header">
+        <div style={styles.brandGroup} className="parichay-brand-group">
+          <img src={parichayLogo} alt="PARICHAY Logo" style={styles.logoImg} className="parichay-logo-img" />
           <div>
-            <div style={styles.brandTitle}>PARICHAY</div>
-            <div style={styles.brandSubtitle}>Privacy & Legal Information</div>
+            <div style={styles.brandTitle} className="parichay-brand-title">PARICHAY</div>
+            <div style={styles.brandSubtitle} className="parichay-brand-subtitle">Privacy & Legal Information</div>
           </div>
         </div>
 
-        <div style={styles.headerActions}>
+        <div style={styles.headerActions} className="parichay-header-actions">
           <button
             onClick={handlePrint}
             className="parichay-btn-outline hide-on-mobile"
@@ -98,26 +100,40 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({
 
           <button
             onClick={handleCopyLink}
-            className="parichay-btn-outline"
+            className="parichay-btn-outline parichay-share-btn"
             title="Copy page link"
           >
             {copied ? <CheckCircle2 size={16} color={AppColors.green} /> : <Share2 size={16} />}
-            <span>{copied ? 'Copied' : 'Share'}</span>
+            <span className="btn-label-desktop">{copied ? 'Copied' : 'Share'}</span>
           </button>
+
+          {onNavigateToTerms && (
+            <button
+              onClick={onNavigateToTerms}
+              className="parichay-btn-outline parichay-switch-btn"
+              title="View Terms of Service"
+            >
+              <FileText size={16} />
+              <span className="btn-label-desktop">Terms of Service</span>
+              <span className="btn-label-mobile">Terms</span>
+            </button>
+          )}
 
           <button
             onClick={onBack}
-            className="parichay-btn-primary"
+            className="parichay-btn-primary parichay-back-btn"
+            title={isLoggedIn ? 'Back to Dashboard' : 'Back to Sign In'}
           >
             <ArrowLeft size={16} />
-            <span>{isLoggedIn ? 'Back to Dashboard' : 'Back to Sign In'}</span>
+            <span className="btn-label-desktop">{isLoggedIn ? 'Back to Dashboard' : 'Back to Sign In'}</span>
+            <span className="btn-label-mobile">{isLoggedIn ? 'Dashboard' : 'Sign In'}</span>
           </button>
         </div>
       </header>
 
       {/* Hero Banner */}
-      <div style={styles.heroBanner}>
-        <div style={styles.heroLogoContainer}>
+      <div style={styles.heroBanner} className="parichay-hero-banner">
+        <div style={styles.heroLogoContainer} className="parichay-hero-logo">
           <img src={parichayLogo} alt="PARICHAY" style={styles.heroLogoImg} />
         </div>
 
@@ -125,23 +141,23 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({
           <Lock size={14} />
           <span>Official Privacy Policy</span>
         </div>
-        <h1 style={styles.heroTitle}>Privacy Policy of PARICHAY</h1>
-        <p style={styles.heroSubtitle}>
+        <h1 style={styles.heroTitle} className="parichay-hero-title">Privacy Policy of PARICHAY</h1>
+        <p style={styles.heroSubtitle} className="parichay-hero-subtitle">
           Welcome to PARICHAY (“App”, “Platform”, “we”, “us”, or “our”). This Privacy Policy explains how
           we collect, use, store, disclose, and protect personal information when you use our community-based application.
         </p>
 
-        <div style={styles.metaRow}>
+        <div style={styles.metaRow} className="parichay-meta-row">
           <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <Calendar size={15} color={AppColors.orange} />
             <strong style={{ color: AppColors.textDark }}>Effective Date:</strong> 28/09/2026
           </span>
-          <span>•</span>
+          <span className="parichay-meta-dot">•</span>
           <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <Calendar size={15} color={AppColors.orange} />
             <strong style={{ color: AppColors.textDark }}>Last Updated:</strong> 28/09/2026
           </span>
-          <span>•</span>
+          <span className="parichay-meta-dot">•</span>
           <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <FileText size={15} color={AppColors.indigo} />
             <span style={{ color: AppColors.indigo, fontWeight: 600 }}>Version 1.0 (Public)</span>
@@ -882,11 +898,11 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({
       </div>
 
       {/* Footer */}
-      <footer style={styles.footer}>
+      <footer style={styles.footer} className="parichay-legal-footer">
         <div>
           © {new Date().getFullYear()} PARICHAY. All rights reserved.
         </div>
-        <div style={{ marginTop: '8px', display: 'flex', justifyContent: 'center', gap: '16px' }}>
+        <div style={{ marginTop: '8px', display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             style={{ background: 'none', border: 'none', color: AppColors.orange, cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600 }}
@@ -894,6 +910,17 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({
             Back to Top ↑
           </button>
           <span>•</span>
+          {onNavigateToTerms && (
+            <>
+              <button
+                onClick={onNavigateToTerms}
+                style={{ background: 'none', border: 'none', color: AppColors.indigo, cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600 }}
+              >
+                Terms of Service
+              </button>
+              <span>•</span>
+            </>
+          )}
           <button
             onClick={onBack}
             style={{ background: 'none', border: 'none', color: AppColors.textMuted, cursor: 'pointer', fontSize: '0.85rem' }}

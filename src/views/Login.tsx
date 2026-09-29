@@ -7,9 +7,10 @@ interface LoginProps {
   onLoginSuccess: (token: string, mobileNumber: string) => void;
   showToast: (msg: string, type: 'success' | 'error') => void;
   onNavigateToPrivacy?: () => void;
+  onNavigateToTerms?: () => void;
 }
 
-export const Login: React.FC<LoginProps> = ({ onLoginSuccess, showToast, onNavigateToPrivacy }) => {
+export const Login: React.FC<LoginProps> = ({ onLoginSuccess, showToast, onNavigateToPrivacy, onNavigateToTerms }) => {
   const {
     countryCode,
     setCountryCode,
@@ -131,6 +132,26 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess, showToast, onNavig
           }}
         >
           Privacy Policy
+        </a>
+        <span style={{ margin: '0 8px' }}>•</span>
+        <a
+          href="/terms-of-service"
+          onClick={(e) => {
+            e.preventDefault();
+            if (onNavigateToTerms) {
+              onNavigateToTerms();
+            } else {
+              window.location.href = '/terms-of-service';
+            }
+          }}
+          style={{
+            color: 'var(--accent-hover)',
+            textDecoration: 'none',
+            cursor: 'pointer',
+            fontWeight: 500,
+          }}
+        >
+          Terms of Service
         </a>
       </div>
     </div>
