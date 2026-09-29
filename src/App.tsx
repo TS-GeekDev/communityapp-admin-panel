@@ -9,6 +9,7 @@ import { Dashboard } from './views/Dashboard';
 import { Approvals } from './views/Approvals';
 import { Members } from './views/Members';
 import { Publish } from './views/Publish';
+import { PrivacyPolicy } from './views/PrivacyPolicy';
 
 export const App: React.FC = () => {
   const [token, setToken] = useState<string | null>(getAuthToken());
@@ -23,6 +24,30 @@ export const App: React.FC = () => {
 
   // Sidebar collapse state
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(window.innerWidth <= 1024);
+
+  // Routing state for public vs main app pages
+  const isPrivacyPath = (pathname: string, hash: string) => {
+    const p = pathname.toLowerCase();
+    const h = hash.toLowerCase();
+    return p === '/privacy-policy' || p === '/privacy' || h === '#privacy-policy' || h === '#privacy';
+  };
+
+  const [currentRoute, setCurrentRoute] = useState<'app' | 'privacy'>(() => {
+    return isPrivacyPath(window.location.pathname, window.location.hash) ? 'privacy' : 'app';
+  });
+
+  const navigateTo = (route: 'app' | 'privacy', path: string) => {
+    window.history.pushState({}, '', path);
+    setCurrentRoute(route);
+  };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentRoute(isPrivacyPath(window.location.pathname, window.location.hash) ? 'privacy' : 'app');
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -112,10 +137,26 @@ export const App: React.FC = () => {
     showToast('Logged out successfully', 'success');
   };
 
+  // If viewing the public Privacy Policy page
+  if (currentRoute === 'privacy') {
+    return (
+      <PrivacyPolicy
+        onBack={() => navigateTo('app', '/')}
+        isLoggedIn={Boolean(token)}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+      />
+    );
+  }
+
   if (!token) {
     return (
       <>
-        <Login onLoginSuccess={handleLoginSuccess} showToast={showToast} />
+        <Login
+          onLoginSuccess={handleLoginSuccess}
+          showToast={showToast}
+          onNavigateToPrivacy={() => navigateTo('privacy', '/privacy-policy')}
+        />
         {toast && (
           <Toast
             message={toast.message}
@@ -157,6 +198,7 @@ export const App: React.FC = () => {
         communityName={communityName}
         isCollapsed={isSidebarCollapsed}
         onToggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        onNavigateToPrivacy={() => navigateTo('privacy', '/privacy-policy')}
       />
       <Header
         tabTitle={currentTab}

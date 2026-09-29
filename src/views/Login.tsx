@@ -6,9 +6,10 @@ import { styles } from '../styles/Login.styles';
 interface LoginProps {
   onLoginSuccess: (token: string, mobileNumber: string) => void;
   showToast: (msg: string, type: 'success' | 'error') => void;
+  onNavigateToPrivacy?: () => void;
 }
 
-export const Login: React.FC<LoginProps> = ({ onLoginSuccess, showToast }) => {
+export const Login: React.FC<LoginProps> = ({ onLoginSuccess, showToast, onNavigateToPrivacy }) => {
   const {
     countryCode,
     setCountryCode,
@@ -107,6 +108,30 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess, showToast }) => {
             </button>
           </form>
         )}
+      </div>
+
+      <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+        <span>Community Connect</span>
+        <span style={{ margin: '0 8px' }}>•</span>
+        <a
+          href="/privacy-policy"
+          onClick={(e) => {
+            e.preventDefault();
+            if (onNavigateToPrivacy) {
+              onNavigateToPrivacy();
+            } else {
+              window.location.href = '/privacy-policy';
+            }
+          }}
+          style={{
+            color: 'var(--accent-hover)',
+            textDecoration: 'none',
+            cursor: 'pointer',
+            fontWeight: 500,
+          }}
+        >
+          Privacy Policy
+        </a>
       </div>
     </div>
   );
