@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAuthToken, removeAuthToken, getSelectedCommunity, setSelectedCommunity, apiGet } from './config/api';
+import { getAuthToken, removeAuthToken, getSelectedCommunity, setSelectedCommunity, apiGet, refreshAccessToken, isTokenExpiringSoon } from './config/api';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { Toast } from './components/Toast';
@@ -25,6 +25,38 @@ export const App: React.FC = () => {
 
   // Sidebar collapse state
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(window.innerWidth <= 1024);
+
+  // Maintain persistent login session by proactively refreshing token before expiry
+  useEffect(() => {
+    if (!token) return;
+
+    const checkAndRefreshToken = async () => {
+      const currentToken = getAuthToken();
+      if (isTokenExpiringSoon(currentToken)) {
+        const refreshed = await refreshAccessToken();
+        if (refreshed) {
+          setToken(refreshed);
+        }
+      }
+    };
+
+    // Check immediately on load or when window/tab becomes visible
+    checkAndRefreshToken();
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        checkAndRefreshToken();
+      }
+    };
+
+    window.addEventListener('visibilitychange', handleVisibilityChange);
+    const interval = setInterval(checkAndRefreshToken, 2 * 60 * 1000); // Check every 2 minutes
+
+    return () => {
+      window.removeEventListener('visibilitychange', handleVisibilityChange);
+      clearInterval(interval);
+    };
+  }, [token]);
 
   // Routing state for public vs main app pages
   const isPrivacyPath = (pathname: string, hash: string) => {
