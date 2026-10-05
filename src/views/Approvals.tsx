@@ -116,11 +116,18 @@ export const Approvals: React.FC<ApprovalsProps> = ({ communityId, showToast }) 
                     </td>
                     <td>
                       <div style={styles.dateText}>
-                        {new Date(req.joinedAt).toLocaleDateString(undefined, {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric',
-                         })}
+                        {(() => {
+                          const raw = req.joinedAt || (req as any).createdAt || (req as any).joined_at || (req as any).created_at;
+                          if (!raw) return 'N/A';
+                          const d = new Date(raw);
+                          return isNaN(d.getTime()) || d.getTime() <= 0
+                            ? 'N/A'
+                            : d.toLocaleDateString(undefined, {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                              });
+                        })()}
                       </div>
                     </td>
                     <td style={{ textAlign: 'right' }}>

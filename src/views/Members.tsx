@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, Search, ChevronLeft, ChevronRight, Check, Download } from 'lucide-react';
+import { Users, Search, ChevronLeft, ChevronRight, Check, Download, X } from 'lucide-react';
 import { useMembers } from '../hooks/useMembers';
 import { ExportMembersModal } from '../components/ExportMembersModal';
 import { styles } from '../styles/Members.styles';
@@ -14,6 +14,7 @@ export const Members: React.FC<MembersProps> = ({ communityId, showToast }) => {
 
   const {
     filteredMembers,
+    paginatedMembers,
     searchQuery,
     setSearchQuery,
     loading,
@@ -23,7 +24,11 @@ export const Members: React.FC<MembersProps> = ({ communityId, showToast }) => {
     exportMembers,
     page,
     setPage,
+    totalPages,
+    totalCount,
+    totalMembers,
     hasMore,
+    hasPrev,
   } = useMembers({ communityId, showToast });
 
   return (
@@ -34,7 +39,10 @@ export const Members: React.FC<MembersProps> = ({ communityId, showToast }) => {
             <Users size={22} color="var(--accent)" />
             <h2 style={styles.title}>Approved Members Directory</h2>
           </div>
-          <p style={styles.subtitle}>Browse and search all approved members in this community</p>
+          <p style={styles.subtitle}>
+            Browse and search all approved members in this community
+            {totalMembers > 0 && ` (${totalMembers} total)`}
+          </p>
         </div>
         <button
           onClick={() => setIsExportModalOpen(true)}
@@ -61,9 +69,28 @@ export const Members: React.FC<MembersProps> = ({ communityId, showToast }) => {
           placeholder="Filter by name, mobile, city, gotra, surname..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          style={styles.searchInput}
+          style={{ ...styles.searchInput, paddingRight: searchQuery ? '40px' : '16px' }}
           className="form-input"
         />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery('')}
+            style={{
+              position: 'absolute',
+              right: '12px',
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--text-muted)',
+              cursor: 'pointer',
+              padding: '4px',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+            title="Clear filter"
+          >
+            <X size={16} />
+          </button>
+        )}
       </div>
 
       {loading ? (
@@ -86,7 +113,7 @@ export const Members: React.FC<MembersProps> = ({ communityId, showToast }) => {
                 </tr>
               </thead>
               <tbody>
-                {filteredMembers.map((member) => {
+                {paginatedMembers.map((member) => {
                   const profile = member.user.profile;
                   return (
                     <tr key={member.id}>
@@ -146,16 +173,21 @@ export const Members: React.FC<MembersProps> = ({ communityId, showToast }) => {
           <div style={styles.pagination}>
             <button
               onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-              disabled={page === 1 || loading}
+              disabled={!hasPrev || loading}
               className="btn btn-secondary"
               style={styles.pBtn}
             >
               <ChevronLeft size={16} />
               <span>Prev</span>
             </button>
-            <span style={styles.pageLabel}>Page {page}</span>
+            <span style={styles.pageLabel}>
+              Page {page} of {totalPages}
+              <span style={{ marginLeft: '8px', opacity: 0.7, fontWeight: 400, fontSize: '0.8rem' }}>
+                ({(page - 1) * 10 + 1}-{Math.min(page * 10, totalCount)} of {totalCount})
+              </span>
+            </span>
             <button
-              onClick={() => setPage((prev) => prev + 1)}
+              onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={!hasMore || loading}
               className="btn btn-secondary"
               style={styles.pBtn}
@@ -170,8 +202,19 @@ export const Members: React.FC<MembersProps> = ({ communityId, showToast }) => {
           <Users size={32} color="var(--text-muted)" style={{ marginBottom: '12px' }} />
           <h3>No members found</h3>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-            Try adjusting your search filter or checking other pages.
+            {searchQuery
+              ? `No approved members match "${searchQuery}". Try adjusting your search keyword.`
+              : 'No approved members in this community yet.'}
           </p>
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="btn btn-secondary"
+              style={{ marginTop: '12px', fontSize: '0.85rem' }}
+            >
+              Clear Filter
+            </button>
+          )}
         </div>
       )}
 
@@ -193,3 +236,4 @@ export const Members: React.FC<MembersProps> = ({ communityId, showToast }) => {
     </div>
   );
 };
+

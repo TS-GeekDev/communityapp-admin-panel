@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { apiGet, apiPost } from '../config/api';
 
 interface PendingMember {
   id: string; // membershipId
   userId: string;
   joinedAt: string;
+  createdAt?: string;
   user: {
     mobileNumber: string;
     profile?: {
@@ -22,6 +23,16 @@ interface UseApprovalsProps {
   showToast: (msg: string, type: 'success' | 'error' | 'info') => void;
 }
 
+const sortByLatest = (list: PendingMember[]): PendingMember[] => {
+  return [...list].sort((a, b) => {
+    const rawA = a.joinedAt || (a as any).createdAt || (a as any).joined_at || (a as any).created_at;
+    const rawB = b.joinedAt || (b as any).createdAt || (b as any).joined_at || (b as any).created_at;
+    const timeA = rawA ? new Date(rawA).getTime() : 0;
+    const timeB = rawB ? new Date(rawB).getTime() : 0;
+    return timeB - timeA; // Descending: latest date first
+  });
+};
+
 export const useApprovals = ({ communityId, showToast }: UseApprovalsProps) => {
   const [pendingRequests, setPendingRequests] = useState<PendingMember[]>([]);
   const [rejectedRequests, setRejectedRequests] = useState<PendingMember[]>([]);
@@ -37,10 +48,10 @@ export const useApprovals = ({ communityId, showToast }: UseApprovalsProps) => {
         apiGet(`/communities/${commId}/rejected`),
       ]);
       if (pendingRes.success && Array.isArray(pendingRes.data)) {
-        setPendingRequests(pendingRes.data);
+        setPendingRequests(sortByLatest(pendingRes.data));
       }
       if (rejectedRes.success && Array.isArray(rejectedRes.data)) {
-        setRejectedRequests(rejectedRes.data);
+        setRejectedRequests(sortByLatest(rejectedRes.data));
       }
     } catch (err: any) {
       showToast(err.message || 'Failed to retrieve join requests', 'error');
@@ -93,7 +104,7 @@ export const useApprovals = ({ communityId, showToast }: UseApprovalsProps) => {
         const targetReq = pendingRequests.find(req => req.id === membershipId);
         setPendingRequests(prev => prev.filter(req => req.id !== membershipId));
         if (targetReq) {
-          setRejectedRequests(prev => [targetReq, ...prev]);
+          setRejectedRequests(prev => sortByLatest([targetReq, ...prev]));
         }
       }
     } catch (err: any) {
@@ -103,7 +114,10 @@ export const useApprovals = ({ communityId, showToast }: UseApprovalsProps) => {
     }
   };
 
-  const requests = activeTab === 'pending' ? pendingRequests : rejectedRequests;
+  const requests = useMemo(() => {
+    const list = activeTab === 'pending' ? pendingRequests : rejectedRequests;
+    return sortByLatest(list);
+  }, [activeTab, pendingRequests, rejectedRequests]);
 
   return {
     requests,

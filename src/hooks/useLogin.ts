@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { apiPost, setAuthToken } from '../config/api';
+import React, { useState } from 'react';
+import { apiPost, setAuthToken, setRefreshToken } from '../config/api';
 import { DEFAULT_MOCK_OTP } from '../constants';
 
 interface UseLoginProps {
@@ -55,6 +55,9 @@ export const useLogin = ({ onLoginSuccess, showToast }: UseLoginProps) => {
 
       if (res.success && res.data?.accessToken) {
         setAuthToken(res.data.accessToken);
+        if (res.data?.refreshToken) {
+          setRefreshToken(res.data.refreshToken);
+        }
         showToast('Login successful', 'success');
         onLoginSuccess(res.data.accessToken, combinedMobile);
       } else {
